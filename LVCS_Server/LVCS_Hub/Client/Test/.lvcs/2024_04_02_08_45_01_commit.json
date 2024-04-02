@@ -1,0 +1,14 @@
+{
+    "_id": "91b312f7-f0fe-43bd-a632-5e761d586ff1",
+    "snap": {
+        "second.py": "f71009a50e770a67f1a686953e2b6ac1bf629d52",
+        "first.py": "18fc179b8d8e9bde8f43ca912606616344a2a3cd",
+        "third.py": "c3f32b773021797e8e20c95b09bcc31a034003e8"
+    },
+    "data": {
+        "third.py": "+def trace(text):\n+    print(text)",
+        "second.py": "+\n def factorial(n):\n     if n == 0:\n         return 1\n     else:\n+        print(\"recursion\")\n         return n * factorial(n - 1)\n \n # Example usage:"
+    },
+    "changes": " -1,7 +1,9 ",
+    "datetime": "2024_04_02_08_45_01"
+}

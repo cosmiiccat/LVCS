@@ -14,9 +14,12 @@ class FileHashing:
     def take_snap(self, directory):
         tracked_files = dict()
         for root, dirs, files in os.walk(directory):
+            dirs[:] = [d for d in dirs if d != '.lvcs']
             for file in files:
                 filepath = os.path.join(root, file)
                 file_hash = self.compute_file_hash(filepath)
+                if filepath.startswith(directory):
+                    filepath = filepath[len(directory):]
                 tracked_files[filepath] = file_hash
         return tracked_files
     
