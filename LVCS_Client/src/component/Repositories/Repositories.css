@@ -1,0 +1,40 @@
+.RepositoriesMainContainer{
+    display: flex;
+    flex-direction: column;
+    background: white;
+    border: 1px solid #b1b1b1;
+    border-radius: 10px;
+    padding : 16px;
+    margin-bottom: 20px;
+    min-height: 75px;
+    max-width: 456px;
+    width: 100%;
+}
+
+
+
+.NameAndSector{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.RepositorySector{
+    font-size: 16px;
+    color: #666;
+    border: 1px solid #c2b8b8;
+    padding: 2px 3px 2px 3px;
+    border-radius: 15px;
+    width: 55px;
+    display: flex;
+    justify-content: center;
+}
+
+.RepositoryName{
+    color: rgb(28, 12, 245);
+}
+
+.RepositoryName:hover{
+    text-decoration: underline;
+    cursor: pointer;
+}

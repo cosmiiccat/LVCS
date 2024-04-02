@@ -1,0 +1,142 @@
+.function-button{
+    width: 100px;
+    height: 50px;
+    font: 1em sans-serif;
+    font-weight: bold;
+    background-color: rgb(88, 253, 88);
+    border: 3px solid rgb(6, 219, 6);
+    border-radius: 10px;
+}
+
+.MainPageMainContainer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    /* height: 100vh; */
+    
+    min-height: 700px;
+    height: 100%;
+}
+
+.function-button:hover{
+    background-color: rgb(6, 219, 6);
+    border: 3px solid rgb(88, 253, 88);
+    cursor: pointer;
+}
+
+
+
+
+.LVCS-Logo{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid rgb(184, 183, 183);
+    border-radius: 20px;
+    padding: 20px;
+    max-width: 400px;
+    max-height: 400px;
+    height: 100%;
+    width: 100%;
+
+}
+
+.ButtonContainer{
+    max-width: 700px;
+    width: 100%;
+
+    max-height: 450px;
+
+
+    display: flex;
+    flex-direction: column;
+    
+
+    border: 2px solid rgb(184, 183, 183);
+    border-radius: 20px;
+
+    padding: 40px 20px 40px 20px;
+}
+
+.ButtonAndInput{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.function-button {
+    margin: 15px;
+}
+
+.Take-Input{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border: 2px solid rgb(184, 183, 183);
+    border-radius: 20px;
+    padding: 20px;
+    max-width: 400px;
+    width: 100%;
+    gap: 20px;
+}
+
+.Path{
+    width: 100%;
+    height: 30px;
+    font: 1em sans-serif;
+    font-weight: bold;
+    border: 2px solid rgb(184, 183, 183);
+    border-radius: 10px;
+    padding: 5px 10px;
+}
+
+.Submit-Button{
+    width: 100px;
+    height: 30px;
+    font: 1em sans-serif;
+    font-weight: bold;
+    background-color: black;
+    color: aliceblue;
+    border: 0px;
+    border-radius: 4px;
+}
+
+.Submit-Button:hover{
+    background-color: rgb(184, 183, 183);
+    color: black;
+    cursor: pointer;
+
+}
+
+.FunctionalityParentContainer{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    gap: 20px;
+    width: 100%;
+    height: 100%;
+}
+
+.ExtraThing{
+    border: 2px solid rgb(184, 183, 183);
+    border-radius: 20px;
+
+    min-width: 400px;
+}
+
+
+
+

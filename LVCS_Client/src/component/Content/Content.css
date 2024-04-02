@@ -1,0 +1,46 @@
+.ContentMainContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    max-width: 900px;
+    width: 100%;
+    border: 1px solid #b1b1b1;
+    padding: 8px 16px 4px 16px;
+}
+
+.NameAndIcon,
+.CommitMessage,
+.CommitDate {
+  flex: 1;
+}
+
+.NameAndIcon{
+    display: flex;
+    flex-direction: row;
+    /* justify-content: space-between; */
+    gap: 15px;
+}
+
+.FolderIcon, .FileIcon{
+    width: 20px;
+    height: 20px;
+}
+
+.CommitDate {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.CommitMessage{
+    display: flex;
+    justify-content: center;
+}
+
+.ContentName{
+    cursor: pointer;
+}
+
+.ContentName:hover{
+    text-decoration: underline;
+    color: blue;
+}
