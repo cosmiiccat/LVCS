@@ -47,6 +47,7 @@ class LVCS:
                         
                     },
                     "changes": '',
+                    "commit_message": "Initial Commit",
                     "datetime": dt_string
                 }
 
@@ -97,7 +98,7 @@ class LVCS:
             }
     
     
-    def commit(self, path, commit = False):
+    def commit(self, path, commit = False, commit_message=""):
 
         dirs = path.split('/')
         status = True
@@ -150,6 +151,7 @@ class LVCS:
                     
                 },
                 "changes": '',
+                "commit_message": commit_message,
                 "datetime": dt_string
             }
 
@@ -214,6 +216,13 @@ class LVCS:
                     content['changes'] = changes
                     content['data'][file_name] = data
                 f.close()
+
+            print({
+                "created_files": created_files,
+                "modified_files": modified_files,
+                "deleted_files": deleted_files,
+                "changes": content['changes']
+            })
 
             if isChanged:
                 if not commit:

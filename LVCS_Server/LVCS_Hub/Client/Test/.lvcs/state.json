@@ -1,4 +1,4 @@
 {
-    "third.py": "def trace(text):\n    print(text)",
-    "second.py": "\ndef factorial(n):\n    if n == 0:\n        return 1\n    else:\n        print(\"recursion\")\n        return n * factorial(n - 1)\n\n# Example usage:\nprint(factorial(5))  # Output: 120\n"
+    "fifth.py": "\n\nt = input((\"Enter any number\"))",
+    "second.py": "\ndef factorial(n):\n    if n == 0:\n        # base case \n        return 1\n    else:\n        return n * factorial(n - 1)\n\n# Example usage:\nprint(factorial(5))  # Output: 120\n"
 }

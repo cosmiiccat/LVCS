@@ -8,5 +8,6 @@ lvcs = LVCS()
 
 lvcs.commit(
     path = "/home/preetam/Desktop/Projects/LVCS/LVCS_Server/LVCS_Hub/Client/Test/",
-    commit=True
+    commit=True,
+    commit_message="Added fifth file"
 )

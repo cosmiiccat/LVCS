@@ -1,0 +1,16 @@
+{
+    "_id": "ef7daa9f-c961-4518-9f9f-8c9fb6400bd6",
+    "snap": {
+        "second.py": "ca43de12245d74219a48fa2f8f883c0296b0cd61",
+        "fourth.py": "1a0a7013adf7c879c73c3ef8e09da44db30430d0",
+        "first.py": "18fc179b8d8e9bde8f43ca912606616344a2a3cd",
+        "fifth.py": "daba231b2846bf7cf596ab0c3802d2f2bbbc0ea6",
+        "third.py": "c3f32b773021797e8e20c95b09bcc31a034003e8"
+    },
+    "data": {
+        "fifth.py": "+\n+\n+t = input((\"Enter any number\"))",
+        "second.py": " \n def factorial(n):\n     if n == 0:\n+        # base case \n         return 1\n     else:\n-        print(\"recursion\")\n-        print(\"Exclamation\")\n         return n * factorial(n - 1)\n \n # Example usage:"
+    },
+    "changes": " -1,10 +1,9 ",
+    "datetime": "2024_04_02_16_11_01"
+}
