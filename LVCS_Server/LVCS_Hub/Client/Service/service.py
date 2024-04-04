@@ -3,6 +3,8 @@ import uuid
 import json
 import copy
 import glob
+import shutil
+import difflib
 from datetime import datetime
 from ..Utils.__init__ import (
     lvcs_hasher,
@@ -46,7 +48,12 @@ class LVCS:
                     "data": {
                         
                     },
-                    "changes": '',
+                    "created_files": [],
+                    "modified_files": [],
+                    "deleted_files": [],
+                    "changes": {
+
+                    },
                     "commit_message": "Initial Commit",
                     "datetime": dt_string
                 }
@@ -60,10 +67,11 @@ class LVCS:
                 for file_path in snap.keys():
                     with open(self.path + file_path, 'r') as fd:
                         data = fd.read()
+                        content['created_files'].append(file_path)
                         state[file_path] = copy.deepcopy(data)
                         changes, data = lvcs_diff.diff(old_content="", new_content=data).split('@@\n')
                         changes = changes.split('@@')[-1]
-                        content['changes'] = changes
+                        content['changes'][file_path] = changes
                         content['data'][file_path] = copy.deepcopy(
                             data
                         )
@@ -150,7 +158,12 @@ class LVCS:
                 "data": {
                     
                 },
-                "changes": '',
+                "created_files": [],
+                "modified_files": [],
+                "deleted_files": [],
+                "changes": {
+
+                },
                 "commit_message": commit_message,
                 "datetime": dt_string
             }
@@ -189,6 +202,10 @@ class LVCS:
                         # store changes 
                         isChanged = True
 
+            content["created_files"] = copy.deepcopy(created_files)
+            content["modified_files"] = copy.deepcopy(modified_files)
+            content["deleted_files"] = copy.deepcopy(deleted_files)
+
             for file_name in created_files:
                 
                 with open(self.path + file_name, 'r') as f:
@@ -199,7 +216,7 @@ class LVCS:
                         new_content=data
                     ).split('@@\n')
                     changes = changes.split('@@')[-1]
-                    content['changes'] = changes
+                    content['changes'][file_name] = changes
                     content['data'][file_name] = data
                 f.close()
 
@@ -213,16 +230,16 @@ class LVCS:
                         new_content=data
                     ).split('@@\n')
                     changes = changes.split('@@')[-1]
-                    content['changes'] = changes
+                    content['changes']['file_name'] = changes
                     content['data'][file_name] = data
                 f.close()
 
-            print({
-                "created_files": created_files,
-                "modified_files": modified_files,
-                "deleted_files": deleted_files,
-                "changes": content['changes']
-            })
+            # print({
+            #     "created_files": created_files,
+            #     "modified_files": modified_files,
+            #     "deleted_files": deleted_files,
+            #     "changes": content['changes']
+            # })
 
             if isChanged:
                 if not commit:
@@ -273,3 +290,53 @@ class LVCS:
             "status": "False",
             "data": "LVCS not initiated in this directory."
         }
+    
+    def pull(self, path):
+
+        self.path = path
+
+        previous_commits = glob.glob(
+            os.path.join(self.path + '.lvcs/', "*")
+        )
+
+        commits = glob.glob(
+            os.path.join(self.path + '.commits/', "*")
+        )
+
+        commits = list(set(commits) - set(previous_commits))
+        sorted_commits = sorted(commits, key=os.path.getctime)
+
+        for commit_path in sorted_commits:
+            commit = str()
+            with open(self.path + commit_path, 'r') as fd:
+                commit = fd.read()
+            fd.close()
+            for file_path in commit['deleted_files']:
+                os.remove(self.path + file_path)
+
+            for file_path in commit['created_files']:
+                with open(self.path + file_path, 'w') as fd:
+                    diff = str()
+                    diff += '--- \n'
+                    diff += '+++ \n'
+                    diff == f'@@{commit["changes"][file_path]}@@\n'
+                    diff = commit['data'][file_path]
+                    new_content = ''.join(list(difflib.restore(diff, 2)))
+                    fd.write(
+                        new_content = new_content
+                    )
+
+            for file_path in commit['modified_files']:
+                with open(self.path + file_path, 'w') as fd:
+                    diff = str()
+                    diff += '--- \n'
+                    diff += '+++ \n'
+                    diff == f"@@{commit['changes'][file_path]}@@\n"
+                    diff = commit['data'][file_path]
+                    new_content = ''.join(list(difflib.restore(diff, 2)))
+                    fd.write(
+                        new_content = new_content
+                    )
+
+            shutil.rmtree(self.path + '.lvcs/')
+            os.rename(self.path + '.commits', self.path + './lvcs')

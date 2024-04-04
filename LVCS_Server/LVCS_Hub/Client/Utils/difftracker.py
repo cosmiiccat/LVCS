@@ -22,4 +22,6 @@ class DiffTracking:
 #     old_content="Hello, World!\nThis is the old file.\nThis is EOF.",
 #     new_content="Hello, World!\nThis is the old file.\n I am adding content to this file.\nThis is EOF.",
 # )
-# print(changes)
+# print({
+#     "changes": str(changes)
+# })
