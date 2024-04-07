@@ -7,6 +7,10 @@ lvcs = LVCS()
 # )
 
 # lvcs.commit(
+#     path="/home/preetam/Desktop/folder/",
+# )
+
+# lvcs.commit(
 #     path = "/home/preetam/Desktop/folder/",
 #     commit=True,
 #     commit_message="Modified python_files"

@@ -266,6 +266,15 @@ class LVCS:
 
             if isChanged:
                 if not commit:
+                    print({
+                        "status": "True",
+                        "data": {
+                            "created_files": created_files,
+                            "modified_files": modified_files,
+                            "deleted_files": deleted_files,
+                            "changes": content['changes']
+                        }})
+
                     return {
                         "status": "True",
                         "data": {
@@ -354,6 +363,15 @@ class LVCS:
                 os.remove(self.path + file_path)
 
             for file_path in commit['created_files']:
+
+                dirs = file_path.split('/')
+                dirs.pop()
+                cur_path = self.path
+                for dir in dirs:
+                    cur_path += (dir + '/')
+                    if not os.path.exists(cur_path):
+                        os.makedirs(cur_path)
+
                 with open(self.path + file_path, 'w') as fd:
                     diff = str()
                     # diff += '--- \n'
