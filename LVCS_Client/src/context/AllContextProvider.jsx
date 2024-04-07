@@ -51,6 +51,7 @@ function AllContextProvider({ children }) {
       
     const [currentDirectory, setCurrentDirectory] = useState("");
     const [currentData, setCurrentData] = useState(data);
+    const [INITpath, setINITpath] = useState("");
 
 
     return (
@@ -59,7 +60,9 @@ function AllContextProvider({ children }) {
             setCurrentDirectory,
             currentData,
             setCurrentData,
-            data
+            data,
+            INITpath,
+            setINITpath,
             
         }}>
         {children}
