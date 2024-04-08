@@ -9,6 +9,8 @@ import json
 import os
 
 
+from .Client.Utils import lvcs_pb_client
+
 # Create your views here.
 @api_view(['GET'])
 def ensure(request):
@@ -100,6 +102,9 @@ def pull(request):
         for key in ["path"]:
             if key not in req_data.keys():
                 raise custom_exceptions.CustomError(f"The parameter {key} in JSON Body is missing")
+
+
+        lvcs_pb_client.client("pull",req_data["path"])
 
         resp = lvcs_client.pull(
             path=req_data["path"],
