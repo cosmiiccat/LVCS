@@ -35,15 +35,18 @@ function RepositoryPage() {
       technology: "JavaScript",
     },
     
+    
   ]);
   console.log(repositories);
   return (
     <div className="Repository">
-      <h1>Available Repositories</h1>
+      <div className="Heading"><h1>Available Repositories</h1></div>
+      
       {/* <div className="checking"> */}
       <div className="RepositoryContainer">
+        
         {repositories.map((repository) => {
-          return <Repositories key={repository.id} repository={repository} />;
+          return  <Repositories key={repository.id} repository={repository} />;
         })}
       </div>
       {/* </div> */}
