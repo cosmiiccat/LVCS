@@ -1,5 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
+import axios from "axios";
+
+
 import "./RepositoryPage.css";
 
 import Repositories from "../Repositories/Repositories";
@@ -38,13 +41,27 @@ function RepositoryPage() {
     
   ]);
   console.log(repositories);
+
+  useEffect(() => {
+    axios
+      .get("http://127.0.0.1:8000/lvcs/repositories")
+      .then((res) => {
+        console.log(res);
+        setRepositories(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
+
   return (
     <div className="Repository">
       <div className="Heading"><h1>Available Repositories</h1></div>
       
       {/* <div className="checking"> */}
       <div className="RepositoryContainer">
-        
+
         {repositories.map((repository) => {
           return  <Repositories key={repository.id} repository={repository} />;
         })}

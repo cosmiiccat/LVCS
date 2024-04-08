@@ -298,7 +298,11 @@ function Functionality() {
         <ul className="lines"></ul>
       </div>
     </div>
-    ) :(<RepositoryPage/>)}
+    ) :(
+      <div className="RepositoryPage-Component">
+        <RepositoryPage/>
+      </div>
+    )}
     </div>
   );
 }

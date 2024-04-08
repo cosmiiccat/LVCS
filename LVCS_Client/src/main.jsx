@@ -18,6 +18,7 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="" element={<Functionality />}>
       <Route path="repositories" element={<RepositoryPage />}/>
+      <Route path="contentpage" element={<ContentPage />}/>
     </Route>
   )
 );
