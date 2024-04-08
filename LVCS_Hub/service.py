@@ -17,9 +17,13 @@ class LVCS:
 
         self.path = path
 
-        previous_commits = glob.glob(
-            os.path.join(self.path + '.lvcs/', "*")
-        )
+        if os.path.exists(self.path + '.lvcs/'):
+            
+            previous_commits = glob.glob(
+                os.path.join(self.path + '.lvcs/', "*")
+            )
+        else:
+            previous_commits=[]
 
         commits = glob.glob(
             os.path.join(self.path + '.commits/', "*")
@@ -36,7 +40,9 @@ class LVCS:
         for id in range(len(commits)):
             commits[id] = self.path + '.commits/' + commits[id]
         
-        sorted_commits = sorted(commits, key=os.path.getctime)
+        # sorted_commits = sorted(commits, key=os.path.getctime)
+        sorted_commits = sorted(commits, key=os.path.basename)
+        print(sorted_commits)
         
         for id in range(len(sorted_commits)):
             sorted_commits[id] = sorted_commits[id].split(self.path + '.commits/')[-1]
@@ -125,11 +131,15 @@ class LVCS:
                     fd.write(
                         new_content
                     )
-
+        if os.path.exists(self.path + '.lvcs/'):
             shutil.rmtree(self.path + '.lvcs/')
-            os.rename(self.path + '.commits', self.path + '.lvcs')
+        os.rename(self.path + '.commits', self.path + '.lvcs')
 
         return {
             "status": "True",
-            "data": "Pushed successfully!" 
+            "data": "Pulled successfully!" 
         }
+    
+# if __name__=="__main__":
+#     LVCS_PULL = LVCS()
+#     LVCS_PULL.pull("/home/abhik/Desktop/LVCS_test/server/testing2/")
