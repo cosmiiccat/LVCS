@@ -117,7 +117,7 @@ function Functionality() {
   const handlePULLbutton = () => {
     console.log("This is the payload: ", payloadforPULL);
     axios
-    .post("http://127.0.0.1:8000/lvcs/pull", payloadforPULL)
+    .post("http://127.0.0.1:8000/lvcs/pull", payloadforPULL,{headers: {}})
       .then((res) => {
         console.log(res);
         consoleLog(res.data);
@@ -138,7 +138,7 @@ function Functionality() {
 
     console.log("This is the payload: ", payload);
     axios
-    .post("http://127.0.0.1:8000/lvcs/push", pushPayload)
+    .post("http://127.0.0.1:8000/lvcs/push", pushPayload ,{headers: {}})
       .then((res) => {
         console.log(res);
         consoleLog(res.data);
@@ -201,7 +201,10 @@ function Functionality() {
       p.textContent = data.error;
     }else{
       p.className = "success";
-      p.textContent = data.data;
+      let dataString = JSON.stringify(data.data);
+
+// Set the text content of the HTML element
+p.textContent = dataString;
     }
 
     div.className = "console-log-message";
@@ -220,6 +223,10 @@ function Functionality() {
       repo_name: "testing3",
       password: "password",
     };
+    const payloadforPath = {
+      path: pathUrl,
+    };
+    setPayload(payload);
     setPayloadforPULL(payload);
     setPathExist(true);
   }
