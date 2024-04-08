@@ -125,7 +125,7 @@ def pull(request):
                 raise custom_exceptions.CustomError(f"The parameter {key} in JSON Body is missing")
 
 
-        lvcs_pb_client.client("pull",req_data["path"])
+        lvcs_pb_client.client("pull",req_data["path"],req_data["repo_name"])
 
         resp = lvcs_client.pull(
             path=req_data["path"],
@@ -147,9 +147,11 @@ def push(request):
         for key in ["path", "repo_name", "password"]:
             if key not in req_data.keys():
                 raise custom_exceptions.CustomError(f"The parameter {key} in JSON Body is missing")
+            
+        lvcs_pb_client.client("push",req_data["path"],req_data["repo_name"])
 
         resp = {
-            
+            "data" : "Successfully pushed to th LVCS Hub"
         }   
 
         return JsonResponse({"success":"true", "data":resp['data']})
