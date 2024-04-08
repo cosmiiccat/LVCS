@@ -9,6 +9,7 @@ urlpatterns = [
     path("add", views.add, name="add"),
     path("commit", views.commit, name="commit"),
     path("pull", views.pull, name="pull"),
+    path("push", views.push, name="push"),
 ]
 
 
