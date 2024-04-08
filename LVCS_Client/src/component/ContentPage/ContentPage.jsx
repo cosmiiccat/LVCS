@@ -9,7 +9,7 @@ import arrow from "../../assets/arrow.svg";
 import Content from "../Content/Content";
 
 function ContentPage() {
-  const { currentData,currentDirectory,setCurrentDirectory,setCurrentData,data } = useContext(AllContext);
+  const { currentData,currentDirectory,setCurrentDirectory,setCurrentData,data,currentContent,mainData } = useContext(AllContext);
 
   const handleGoBack = () => {
     let temp = currentDirectory.split("/");
