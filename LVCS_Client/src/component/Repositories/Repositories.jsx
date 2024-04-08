@@ -9,19 +9,22 @@ import { useContext } from "react";
 import AllContext from "../../context/AllContext";
 
 function Repositories({ repository }) {
-  const { currentDirectory, setCurrentDirectory } = useContext(AllContext);
+  const { setCurrentContent } = useContext(AllContext);
   const navigate = useNavigate();
+
   const handleRepositoryClick = () => {
     axios
-      .get("http://127.0.0.1:8000/lvcs/repository")
+      .get("http://127.0.0.1:8000/lvcs/content")
       .then((response) => {
         console.log(response.data);
+        setCurrentContent(response.data);
       })
       .catch((error) => {
         console.log(error);
       });
     navigate("/contentpage");
   };
+
   return (
     <div className="RepositoriesMainContainer">
       <div className="NameAndSector">

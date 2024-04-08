@@ -53,6 +53,7 @@ function AllContextProvider({ children }) {
     const [currentData, setCurrentData] = useState(data);
     const [INITpath, setINITpath] = useState("");
     const [currentContent, setCurrentContent] = useState(data);
+    const [mainData, setMainData] = useState(data);
 
 
     return (
