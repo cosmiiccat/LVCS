@@ -20,8 +20,30 @@ class PbClient:
         except Exception as e:
             print("Error occurred during folder reception:", e)
 
+    # Function to send folder to server
+    def send_folder(self, sock, folder_path):
+        try:
+            # Compress the folder
+            base_name = folder_path.split('/')[-1]
+            zip_name =  base_name + '.zip'
+            with zipfile.ZipFile(zip_name, 'w', zipfile.ZIP_DEFLATED) as zipf:
+                for root, dirs, files in os.walk(folder_path):
+                    for file in files:
+                        zipf.write(os.path.join(root, file), os.path.relpath(os.path.join(root, file), folder_path))
 
-    def client(self, request_type, folder_path):
+            sock.send(base_name.encode())
+
+            # Send the compressed folder
+            
+            with open(zip_name, 'rb') as file:
+                for data in file:
+                    sock.sendall(data)
+            print("Folder sent successfully.")
+            os.system(f'rm {zip_name}')
+        except Exception as e:
+            print("Error occurred during folder transmission:", e)
+
+    def client(self, request_type, folder_path, repo_name):
         # Server configuration
         host = '192.168.29.4'
         port = 12345
@@ -38,7 +60,7 @@ class PbClient:
 
             if request_type=="pull":
                 folder_name = folder_path + ".commits"   #The received folder will be saved with this name
-                data = {'type': request_type}
+                data = {'type': request_type,'repo':repo_name}
                 json_data = json.dumps(data)
                 client_socket.send(json_data.encode("utf-8"))
                 
@@ -50,6 +72,15 @@ class PbClient:
                 os.system(f'rm {folder_name}.zip')
                 print("Folder unzipped successfully.")
 
+            elif request_type=="push":
+                source_folder_path = folder_path
+                folder_path = source_folder_path + '.lvcs'  
+                data = {'type': request_type,'repo':repo_name}
+                json_data = json.dumps(data)
+                client_socket.send(json_data.encode("utf-8"))
+
+                # Send folder to the server
+                self.send_folder(client_socket, folder_path)
         except Exception as e:
             print("Error:", e)
 
