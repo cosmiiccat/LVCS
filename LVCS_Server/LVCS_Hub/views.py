@@ -9,6 +9,8 @@ import json
 import os
 
 
+from .Client.Utils import lvcs_pb_client
+
 # Create your views here.
 @api_view(['GET'])
 def ensure(request):
@@ -118,10 +120,20 @@ def pull(request):
             raise custom_exceptions.CustomError(f"Method - {request.method} is not Allowed")
         
         req_data = json.loads(request.body.decode('utf-8'))
+<<<<<<< HEAD
         for key in ["path"]:
             if key not in req_data.keys():
                 raise custom_exceptions.CustomError(f"The parameter {key} in JSON Body is missing")
 
+=======
+        for key in ["path", "repo_name", "password"]:
+            if key not in req_data.keys():
+                raise custom_exceptions.CustomError(f"The parameter {key} in JSON Body is missing")
+
+
+        lvcs_pb_client.client("pull",req_data["path"],req_data["repo_name"])
+
+>>>>>>> 077cfe0e4ba0521a475c4bb81164fc0a3ce6b7ee
         resp = lvcs_client.pull(
             path=req_data["path"],
         )   
@@ -129,4 +141,30 @@ def pull(request):
         return JsonResponse({"success":"true", "data":resp['data']})
 
     except Exception as e:
+<<<<<<< HEAD
+=======
+        return JsonResponse({"success":"false", "error":f"{e}"})
+    
+@csrf_exempt
+@api_view(['POST'])
+def push(request):
+    try:
+        if request.method != "POST":
+            raise custom_exceptions.CustomError(f"Method - {request.method} is not Allowed")
+        
+        req_data = json.loads(request.body.decode('utf-8'))
+        for key in ["path", "repo_name", "password"]:
+            if key not in req_data.keys():
+                raise custom_exceptions.CustomError(f"The parameter {key} in JSON Body is missing")
+            
+        lvcs_pb_client.client("push",req_data["path"],req_data["repo_name"])
+
+        resp = {
+            "data" : "Successfully pushed to th LVCS Hub"
+        }   
+
+        return JsonResponse({"success":"true", "data":resp['data']})
+
+    except Exception as e:
+>>>>>>> 077cfe0e4ba0521a475c4bb81164fc0a3ce6b7ee
         return JsonResponse({"success":"false", "error":f"{e}"})

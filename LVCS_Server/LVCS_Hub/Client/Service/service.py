@@ -15,98 +15,192 @@ class LVCS:
 
     def __init__(self):
         self.path = None
+        self.global_path = None
 
-    def init(self, path):
-            
-            dirs = path.split('/')
-            status = True
-            cur_path = ''
-            for dir in dirs:
-                cur_path += (dir + '/')
-                if os.path.exists(cur_path + '.lvcs'):
-                    status = False
-                    break
-            if status:
-                
-                # Check for circular .lvcs folder tree traversal ---> TBD
+    def config(self, path, username, email):
 
-                os.makedirs(path + '.lvcs', exist_ok=True)
-                self.path = path
+        dirs = path.split('/')
+        cur_path = '/'
+        for dir in dirs:
+            cur_path += (dir + '/')
+            if dir == "Desktop":
+                self.global_path = copy.deepcopy(cur_path)
+                break
 
-                snap = lvcs_hasher.take_snap(
-                    directory=self.path
+        if not os.path.exists(self.global_path + 'lvcs.config'):
+            with open(self.global_path + 'lvcs.config', 'w') as file:
+                json.dump(
+                    {
+                        "username": username,
+                        "email": email
+                    },
+                    file,
+                    indent=4
                 )
 
-                now = datetime.now()
-                _id = str(uuid.uuid4())
-                dt_string = now.strftime("%Y_%m_%d_%H_%M_%S")
-                commit_name = f"{dt_string}_commit.json"
+            return {
+                "status": "True",
+                "data": f"LVCS is configured with username:{username} and email:{email}"
+            }
+        return {
+            "status": "False",
+            "data": "LVCS is already configured"
+        }
+    
+    def reconfig(self, username, email):
 
-                content = {
-                    "_id": _id, 
-                    "snap": snap, 
-                    "data": {
-                        
-                    },
-                    "created_files": [],
-                    "modified_files": [],
-                    "deleted_files": [],
-                    "changes": {
+        with open(self.global_path + 'lvcs.config', 'w') as file:
+            json.dump(
+                {
+                    "username": username,
+                    "email": email
+                },
+                file,
+                indent=4
+            )
 
-                    },
-                    "commit_message": "Initial Commit",
-                    "datetime": dt_string
-                }
+        return {
+            "status": "True",
+            "data": "LVCS is re configured with username:{username} and email:{email}"
+        }
 
-                state = {
 
-                }
+    def init(self, path):
 
-                # print(content)
+        dirs = path.split('/')
+        cur_path = '/'
+        for dir in dirs:
+            cur_path += (dir + '/')
+            if dir == "Desktop":
+                self.global_path = copy.deepcopy(cur_path)
+                break
 
-                for file_path in snap.keys():
-                    with open(self.path + file_path, 'r') as fd:
-                        data = fd.read()
-                        content['created_files'].append(file_path)
-                        state[file_path] = copy.deepcopy(data)
-                        changes, data = lvcs_diff.diff(old_content="", new_content=data).split('@@\n')
-                        changes = changes.split('@@')[-1]
-                        content['changes'][file_path] = changes
-                        content['data'][file_path] = copy.deepcopy(
-                            data
-                        )
-                    fd.close()
-
-                with open(self.path + '.lvcs/' + 'state.json', 'w') as file:
-                    json.dump(
-                        state, 
-                        file, 
-                        indent=4
-                    )
-                file.close()
-
-                with open(self.path + '.lvcs/' + commit_name, 'w') as file:
-                    json.dump(
-                        content, 
-                        file, 
-                        indent=4
-                    )
-                file.close()
-
-                
-
-                return {
-                    "status": "True",
-                    "data": "This folder is now being tracked by LVCS"
-                }
-        
+        if not os.path.exists(self.global_path + 'lvcs.config'):
             return {
                 "status": "False",
-                "data": "This folder is already being tracked by LVCS"
+                "data": "LVCS is not yet configured"
+            }
+        
+        dirs = path.split('/')
+        cur_path = '/'
+        for dir in dirs:
+            cur_path += (dir + '/')
+            if dir == "Desktop":
+                self.global_path = copy.deepcopy(cur_path)
+                break
+        
+        with open(self.global_path + 'lvcs.config', 'r') as file:
+            details = json.loads(
+                file.read()
+            )
+        file.close()
+        
+        dirs = path.split('/')
+        status = True
+        cur_path = ''
+        for dir in dirs:
+            cur_path += (dir + '/')
+            if os.path.exists(cur_path + '.lvcs'):
+                status = False
+                break
+        if status:
+            
+            # Check for circular .lvcs folder tree traversal ---> TBD
+
+            os.makedirs(path + '.lvcs', exist_ok=True)
+            self.path = path
+
+            snap = lvcs_hasher.take_snap(
+                directory=self.path
+            )
+
+            now = datetime.now()
+            _id = str(uuid.uuid4())
+            dt_string = now.strftime("%Y_%m_%d_%H_%M_%S")
+            commit_name = f"{dt_string}_commit.json"
+
+            content = {
+                "_id": _id, 
+                "snap": snap, 
+                "data": {
+                    
+                },
+                "created_files": [],
+                "modified_files": [],
+                "deleted_files": [],
+                "changes": {
+
+                },
+                "username": details['username'],
+                "email": details['email'],
+                "commit_message": "Initial Commit",
+                "datetime": dt_string
+            }
+
+            # state = {
+
+            # }
+
+            # print(content)
+
+            for file_path in snap.keys():
+                with open(self.path + file_path, 'r') as fd:
+                    data = fd.read()
+                    content['created_files'].append(file_path)
+                    # state[file_path] = copy.deepcopy(data)
+                    changes, data = lvcs_diff.diff(old_content="", new_content=data).split('@@\n')
+                    changes = changes.split('@@')[-1]
+                    content['changes'][file_path] = changes
+                    content['data'][file_path] = copy.deepcopy(
+                        data
+                    )
+                fd.close()
+
+            # with open(self.path + '.lvcs/' + 'state.json', 'w') as file:
+            #     json.dump(
+            #         state, 
+            #         file, 
+            #         indent=4
+            #     )
+            # file.close()
+
+            with open(self.path + '.lvcs/' + commit_name, 'w') as file:
+                json.dump(
+                    content, 
+                    file, 
+                    indent=4
+                )
+            file.close()
+
+            
+
+            return {
+                "status": "True",
+                "data": "This folder is now being tracked by LVCS"
             }
     
+        return {
+            "status": "False",
+            "data": "This folder is already being tracked by LVCS"
+        }
+
     
     def commit(self, path, commit = False, commit_message=""):
+
+        dirs = path.split('/')
+        cur_path = '/'
+        for dir in dirs:
+            cur_path += (dir + '/')
+            if dir == "Desktop":
+                self.global_path = copy.deepcopy(cur_path)
+                break
+
+        with open(self.global_path + 'lvcs.config', 'r') as file:
+            details = json.loads(
+                file.read()
+            )
+        file.close()
+
 
         dirs = path.split('/')
         status = True
@@ -164,19 +258,21 @@ class LVCS:
                 "changes": {
 
                 },
+                "username": details['username'],
+                "email": details['email'],
                 "commit_message": commit_message,
                 "datetime": dt_string
             }
 
-            state = {
+            # state = {
 
-            }
+            # }
 
-            with open(self.path + '.lvcs/' + 'state.json', 'rb') as file:
-                last_state = json.load(
-                    file
-                )
-            file.close()
+            # with open(self.path + '.lvcs/' + 'state.json', 'rb') as file:
+            #     last_state = json.load(
+            #         file
+            #     )
+            # file.close()
 
             for file in last_snap['snap'].keys():
                 if file not in snap.keys():
@@ -210,7 +306,7 @@ class LVCS:
                 
                 with open(self.path + file_name, 'r') as f:
                     data = f.read()
-                    state[file_name] = copy.deepcopy(data)
+                    # state[file_name] = copy.deepcopy(data)
                     changes, data = lvcs_diff.diff(
                         old_content="",
                         new_content=data
@@ -224,9 +320,32 @@ class LVCS:
                 
                 with open(self.path + file_name, 'r') as f:
                     data = f.read()
-                    state[file_name] = copy.deepcopy(data)
+                    diff = str()
+                    # diff += '--- \n'
+                    # diff += '+++ \n'
+                    # diff += f"@@{last_snap['changes'][file_name]}@@\n"
+                    diff = last_snap['data'][file_name].splitlines()
+                    augmented_diff = list()
+                    for id in range(len(diff)):
+                        line = diff[id]
+                        if '+' in line:
+                            line = '+ ' + line[1:]
+                        elif '-' in line:
+                            line = '- ' + line[1:]
+                        else:
+                            line = ' ' + line
+                        augmented_diff.append(line)
+                        if(id != len(diff) - 1):
+                            augmented_diff.append('')
+                    
+                    old_content_list = list(difflib.restore(augmented_diff, 2))
+                    old_content = ''
+                    for line in old_content_list:
+                        old_content += line
+                        old_content += '\n'
+                    # state[file_name] = copy.deepcopy(data)
                     changes, data = lvcs_diff.diff(
-                        old_content=last_state[file_name],
+                        old_content=old_content,
                         new_content=data
                     ).split('@@\n')
                     changes = changes.split('@@')[-1]
@@ -243,6 +362,15 @@ class LVCS:
 
             if isChanged:
                 if not commit:
+                    print({
+                        "status": "True",
+                        "data": {
+                            "created_files": created_files,
+                            "modified_files": modified_files,
+                            "deleted_files": deleted_files,
+                            "changes": content['changes']
+                        }})
+
                     return {
                         "status": "True",
                         "data": {
@@ -253,13 +381,13 @@ class LVCS:
                         }
                     }
                 
-                with open(self.path + '.lvcs/' + 'state.json', 'w') as file:
-                    json.dump(
-                        state, 
-                        file, 
-                        indent=4
-                    )
-                file.close()
+                # with open(self.path + '.lvcs/' + 'state.json', 'w') as file:
+                #     json.dump(
+                #         state, 
+                #         file, 
+                #         indent=4
+                #     )
+                # file.close()
 
                 with open(self.path + '.lvcs/' + commit_name, 'w') as file:
                     json.dump(
@@ -303,40 +431,111 @@ class LVCS:
             os.path.join(self.path + '.commits/', "*")
         )
 
+        for idx in range(len(commits)):
+            commits[idx] = commits[idx].split(self.path + '.commits/')[-1]
+
+        for idx in range(len(previous_commits)):
+            previous_commits[idx] = previous_commits[idx].split(self.path + '.lvcs/')[-1]
+
         commits = list(set(commits) - set(previous_commits))
+        
+        for id in range(len(commits)):
+            commits[id] = self.path + '.commits/' + commits[id]
+        
         sorted_commits = sorted(commits, key=os.path.getctime)
+        
+        for id in range(len(sorted_commits)):
+            sorted_commits[id] = sorted_commits[id].split(self.path + '.commits/')[-1]
 
         for commit_path in sorted_commits:
             commit = str()
-            with open(self.path + commit_path, 'r') as fd:
+            with open(self.path + '.commits/' + commit_path, 'r') as fd:
                 commit = fd.read()
             fd.close()
+            # print(commit)
+            commit = json.loads(commit)
+            # print(commit)
             for file_path in commit['deleted_files']:
                 os.remove(self.path + file_path)
 
             for file_path in commit['created_files']:
+
+                dirs = file_path.split('/')
+                dirs.pop()
+                cur_path = self.path
+                for dir in dirs:
+                    cur_path += (dir + '/')
+                    if not os.path.exists(cur_path):
+                        os.makedirs(cur_path)
+
                 with open(self.path + file_path, 'w') as fd:
                     diff = str()
-                    diff += '--- \n'
-                    diff += '+++ \n'
-                    diff == f'@@{commit["changes"][file_path]}@@\n'
-                    diff = commit['data'][file_path]
-                    new_content = ''.join(list(difflib.restore(diff, 2)))
-                    fd.write(
-                        new_content = new_content
+                    # diff += '--- \n'
+                    # diff += '+++ \n'
+                    # diff == f'@@{commit["changes"][file_path]}@@\n'
+                    # print("Creating File")
+                    diff = commit['data'][file_path].splitlines()
+                    augmented_diff = list()
+                    for id in range(len(diff)):
+                        line = diff[id]
+                        if '+' in line:
+                            line = '+ ' + line[1:]
+                        elif '-' in line:
+                            line = '- ' + line[1:]
+                        else:
+                            line = ' ' + line
+                        augmented_diff.append(line)
+                        if(id != len(diff) - 1):
+                            augmented_diff.append('')
+                    
+                    new_content_list = list(difflib.restore(augmented_diff, 2))
+                    new_content = ''
+                    for line in new_content_list:
+                        new_content += line
+                        new_content += '\n'
+                    # new_content = ''.join(list(difflib.restore(diff, 2)))
+                    # print("\n\n\n" + new_content)
+                    fd.write (
+                        new_content
                     )
 
             for file_path in commit['modified_files']:
                 with open(self.path + file_path, 'w') as fd:
                     diff = str()
-                    diff += '--- \n'
-                    diff += '+++ \n'
-                    diff == f"@@{commit['changes'][file_path]}@@\n"
-                    diff = commit['data'][file_path]
-                    new_content = ''.join(list(difflib.restore(diff, 2)))
+                    # diff += '--- \n'
+                    # diff += '+++ \n'
+                    # diff == f"@@{commit['changes'][file_path]}@@\n"
+                    # diff = commit['data'][file_path].splitlines()
+                    diff = commit['data'][file_path].splitlines()
+                    augmented_diff = list()
+                    for id in range(len(diff)):
+                        line = diff[id]
+                        if '+' in line:
+                            line = '+ ' + line[1:]
+                        elif '-' in line:
+                            line = '- ' + line[1:]
+                        else:
+                            line = ' ' + line
+                        augmented_diff.append(line)
+                        if(id != len(diff) - 1):
+                            augmented_diff.append('')
+                    
+                    # print(augmented_diff)
+                    new_content_list = list(difflib.restore(augmented_diff, 2))
+                    new_content = ''
+                    for line in new_content_list:
+                        new_content += line
+                        new_content += '\n'
+                    # new_content = ''.join(list(difflib.restore(diff, 2)))
+                    # print(new_content)
                     fd.write(
-                        new_content = new_content
+                        new_content
                     )
 
             shutil.rmtree(self.path + '.lvcs/')
-            os.rename(self.path + '.commits', self.path + './lvcs')
+            os.rename(self.path + '.commits', self.path + '.lvcs')
+
+        return {
+            "status": "True",
+            "data": "Pushed successfully!" 
+        }
