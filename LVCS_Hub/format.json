@@ -1,0 +1,16 @@
+{
+    "global.py": "\nif __name__ == \"__main__\":\n    print(\"Entry\")\n\n    print(\"This is global testing file\")\n",
+    "diff.py": "import difflib\n\ndef diff(old_content, new_content):\n        old_lines = old_content.splitlines(keepends=True)\n        new_lines = new_content.splitlines(keepends=True)\n        changes = list()\n\n        for line in difflib.ndiff(old_lines, new_lines):\n            changes.append(line)\n\n        return '\\n'.join(changes)\n\nwith open('/home/preetam/Desktop/folder/global.py', 'r') as file:\n    data = file.read()\n\n    changes = diff(\"\", data)   \n\nchanges = changes.splitlines()\nprint(changes)   \n\nold_content_list = list(difflib.restore(changes, 2))\nnew_content_list = list(difflib.restore(changes, 1))\n\n\nprint(old_content_list)\nprint(new_content_list)\n# print(list(difflib.restore(changes, 2)))\n\n# diff = ndiff('one\\ntwo\\nthree\\n'.splitlines(keepends=True),\n#              'ore\\ntree\\nemu\\n'.splitlines(keepends=True))\n# diff = list(diff) # materialize the generated delta into a list\n# print(''.join(restore(diff, 1)), end=\"\")\n# one\n# two\n# three\n# print(''.join(restore(diff, 2)), end=\"\")",
+    "subfolder2": {
+        "two.py": " \n\ndef factorial(n):\n    if n == 0:\n        # base case \n        return 1\n    else:\n        return n * factorial(n - 1)\n\n# Example usage:\nprint(factorial(5))  # Output: 120",
+        "one.py": "def binary_exponentiation(a, b):\n    result = 1\n    while b > 0:\n        if b % 2 == 1:\n            result *= a\n        a *= a\n        b //= 2\n    return result\n\n# Example usage:\nprint(binary_exponentiation(2, 10))  # Output: 1024 \n"
+    },
+    "subfolder1": {
+        "three.py": "def binary_exponentiation(a, b):\n    result = 1\n    while b > 0:\n        if b % 2 == 1:\n            result *= a\n        a *= a\n        b //= 2\n    return result\n\n# Example usage:\nprint(binary_exponentiation(2, 10))  # Output: 1024 ",
+        "two.py": " \ndef factorial(n):\n    if n == 0:\n        # base case \n        return 1\n    else:\n        return n * factorial(n - 1)\n\n# Example usage:\nprint(factorial(5))  # Output: 120\n",
+        "one.py": "def binary_exponentiation(a, b):\n    result = 1\n    while b > 0:\n        if b % 2 == 1:\n            result *= a\n        a *= a\n        b //= 2\n    return result\n\n# Example usage:\nprint(binary_exponentiation(2, 10))  # Output: 1024 \n",
+        "HTML": {
+            "index.html": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Document</title>\n</head>\n<body>\n    \n</body>\n</html>"
+        }
+    }
+}

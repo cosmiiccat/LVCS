@@ -1,6 +1,7 @@
 
 import os
 import copy
+import json
 
 ROOT_PATH = r"/home/preetam/Desktop/Hub/"
 
@@ -19,27 +20,17 @@ def iterate(directory):
             tracked_files[filepath] = file_content
     return tracked_files
 
-def constructFtree(directory):
-    dir = {
-
-    }
-
-    cur_dir = dir
-
-    tracked_files = iterate(directory)
-    for filename, content in tracked_files.items():
-        dirs = filename.split('/')
-        for idx in range(len(dirs)):
-            if dirs[idx] not in cur_dir.keys():
-                cur_dir[str(dirs[idx])] = {
-
-                }
-                dir = copy.deepcopy(dir)
-                cur_dir = 
+def convert_to_nested_dict(file_structure):
+    result = {}
+    for path, content in file_structure.items():
+        parts = path.split("/")
+        current = result
+        for part in parts[:-1]:
+            if part not in current:
+                current[part] = {}
+            current = current[part]
+        current[parts[-1]] = content
+    return result
 
 
-tracked_files = iterate(
-    directory="folder/"
-)
 
-print(tracked_files)
