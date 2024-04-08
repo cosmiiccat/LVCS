@@ -120,7 +120,7 @@ def pull(request):
             raise custom_exceptions.CustomError(f"Method - {request.method} is not Allowed")
         
         req_data = json.loads(request.body.decode('utf-8'))
-        for key in ["path"]:
+        for key in ["path", "repo_name", "password"]:
             if key not in req_data.keys():
                 raise custom_exceptions.CustomError(f"The parameter {key} in JSON Body is missing")
 
@@ -130,6 +130,27 @@ def pull(request):
         resp = lvcs_client.pull(
             path=req_data["path"],
         )   
+
+        return JsonResponse({"success":"true", "data":resp['data']})
+
+    except Exception as e:
+        return JsonResponse({"success":"false", "error":f"{e}"})
+    
+@csrf_exempt
+@api_view(['POST'])
+def push(request):
+    try:
+        if request.method != "POST":
+            raise custom_exceptions.CustomError(f"Method - {request.method} is not Allowed")
+        
+        req_data = json.loads(request.body.decode('utf-8'))
+        for key in ["path", "repo_name", "password"]:
+            if key not in req_data.keys():
+                raise custom_exceptions.CustomError(f"The parameter {key} in JSON Body is missing")
+
+        resp = {
+            
+        }   
 
         return JsonResponse({"success":"true", "data":resp['data']})
 
