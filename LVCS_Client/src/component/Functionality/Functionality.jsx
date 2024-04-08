@@ -19,14 +19,27 @@ function Functionality() {
     useState(false);
   const [additionalComponentforCommit, setAdditionalComponentforCommit] =
     useState(false);
+  const [additionalComponentforConfig, setAdditionalComponentforConfig] = useState(false);
+  const [additionalComponentforPush, setAdditionalComponentforPush] = useState(false);
+
   const [pathUrl, setPathUrl] = useState("");
   const [pathUrlforInit, setPathUrlforInit] = useState("");
   const [pathExist, setPathExist] = useState(false);
   const [payload, setPayload] = useState({});
+  const [payloadforPULL, setPayloadforPULL] = useState({});
   const [commitPayload, setCommitPayload] = useState({});
   const [commitMessage, setCommitMessage] = useState("");
   const [commitStatus, setCommitStatus] = useState(false);
+  const [pushStatus, setPushStatus] = useState(false);
   const [currentStatus, setCurrentStatus] = useState("local");
+
+  const [configStatus, setConfigStatus] = useState(false);
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+
+  const [repo_name, setRepoName] = useState("");
+  const [password, setPassword] = useState("");
+
 
   const pathRef = useRef(null);
   const parthRefforInit = useRef(null);
@@ -34,6 +47,10 @@ function Functionality() {
 
   const handleINITbutton = () => {
     setAdditionalComponentforInit(true);
+  };
+
+  const handlePUSH = () => {
+    setAdditionalComponentforPush(!additionalComponentforPush);
   };
 
   useEffect(() => {
@@ -98,8 +115,9 @@ function Functionality() {
   };
 
   const handlePULLbutton = () => {
+    console.log("This is the payload: ", payloadforPULL);
     axios
-    .post("http://127.0.0.1:8000/lvcs/pull", payload)
+    .post("http://127.0.0.1:8000/lvcs/pull", payloadforPULL)
       .then((res) => {
         console.log(res);
         consoleLog(res.data);
@@ -110,9 +128,17 @@ function Functionality() {
   };
 
   const handlePUSHbutton = () => {
+    const pushPayload = {
+      path: pathUrl,
+      repo_name: repo_name,
+      password: password
+    };  
+
+
+
     console.log("This is the payload: ", payload);
     axios
-    .post("http://127.0.0.1:8000/lvcs/push", payload)
+    .post("http://127.0.0.1:8000/lvcs/push", pushPayload)
       .then((res) => {
         console.log(res);
         consoleLog(res.data);
@@ -135,6 +161,35 @@ function Functionality() {
       });
   };
 
+  const handleCONFIGbutton = () => {
+    setAdditionalComponentforConfig(!additionalComponentforConfig);
+  }
+
+  const handleConfig = () => {
+    if (!username || !email) return;
+    setConfigStatus(true);
+    console.log("This is the username: ", username);
+    console.log("This is the email: ", email);
+    const CONFIGpayload = {
+      path: pathUrl,
+      username: username,
+      email: email,
+    };
+    axios
+      .post("http://127.0.0.1:8000/lvcs/config",CONFIGpayload)
+      .then((res) => {
+        console.log(res);
+        consoleLog(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    setAdditionalComponentforConfig(!additionalComponentforConfig);
+  };
+
+
+
+
   const consoleLog = (data) => {
     const ul = document.querySelector(".lines");
     const div = document.createElement("div");
@@ -156,6 +211,22 @@ function Functionality() {
     div.append(span, p);
     ul.appendChild(div);
   };
+
+
+  const handlePath = () => {
+    if(pathUrl.length === 0) return;
+    const payload = {
+      path: pathUrl,
+      repo_name: "testing3",
+      password: "password",
+    };
+    setPayloadforPULL(payload);
+    setPathExist(true);
+  }
+
+  useEffect(() => {
+    console.log("This is the paylaod for pull: ", payloadforPULL);
+  }, [payloadforPULL]);
 
   const handlePathExist = () => {
     if (!pathExist) setPathUrl(pathUrl);
@@ -199,7 +270,8 @@ function Functionality() {
           <img src={logo} alt="LVCS Logo" />
         </div>
 
-        {additionalComponentforInit && (
+        {/* {additionalComponentforInit && ( */}
+        {/* {pathExist === true ? ( */}
         <div className="PathContainer">
           <input
             type="text"
@@ -211,20 +283,17 @@ function Functionality() {
           <div className="set-reset-buttons">
             <button
               className="Submit-Button Set-Button"
-              onClick={handlePathExist}
+              onClick={handlePath}
             >
               Set
             </button>
-            <button
-              className="Submit-Button Reset-Button"
-              onClick={handlePathExist}
-            >
-              Reset
-            </button>
           </div>
         </div>
+        {/* ) : ( <div className="pathexist"><p>path is already set!!</p></div> */}
+        {/* )} */}
+        
 
-        )}
+        {/* )} */}
 
         {additionalComponentforCommit &&
           (commitStatus ? (
@@ -249,12 +318,78 @@ function Functionality() {
             </div>
           ))}
 
+{additionalComponentforConfig &&
+          (configStatus ? (
+            <div className="ConfigContainer PathContainer"> Config Success </div>
+          ) : (
+            <div className="ConfigContainer PathContainer">
+              
+              <input
+                type="text"
+                className="commit-message Path"
+                placeholder="Enter your username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+
+<input
+                type="text"
+                className="commit-message Path "
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <div className="set-commit-message-button">
+                <button
+                  className="Submit-Button Set-Button commit-button"
+                  onClick={handleConfig}
+                >
+                  Config
+                </button>
+              </div>
+            </div>
+          ))}
+
+{additionalComponentforPush &&
+          (pushStatus ? (
+            <div className="PushContainer PathContainer"> Successfully pushed </div>
+          ) : (
+            <div className="PushContainer PathContainer">
+              <input
+                type="text"
+                className="push-input commit-message Path"
+                placeholder="Enter repository name"
+                value={repo_name}
+                onChange={(e) => setRepoName(e.target.value)}
+              />
+
+              <input
+                type="text"
+                className="password-input commit-message Path"
+                placeholder="Enter password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <div className="set-commit-message-button">
+                <button
+                  className="Submit-Button Set-Button commit-button"
+                  onClick={handlePUSHbutton}
+                >
+                  Push Changes
+                </button>
+              </div>
+            </div>
+          ))}
+
         
 
         <div className="ButtonAndInput">
           <div className="ButtonContainer">
             <div className="row">
-              <button className="function-button" onClick={handleINITbutton}>
+              <button className="function-button" onClick={handleCONFIGbutton}>
+                config
+              </button>
+              <button className="function-button" onClick={handlePathExist}>
                 init
               </button>
               <button className="function-button" onClick={handleADDbutton}>
@@ -268,7 +403,7 @@ function Functionality() {
               <button className="function-button" onClick={handlePULLbutton}>
                 pull
               </button>
-              <button className="function-button" onClick={handlePUSHbutton}>
+              <button className="function-button" onClick={handlePUSH}>
                 push
               </button>
               <button className="function-button" onClick={handleCLONEbutton}>

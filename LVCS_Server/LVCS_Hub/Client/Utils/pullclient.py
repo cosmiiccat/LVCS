@@ -45,7 +45,7 @@ class PbClient:
 
     def client(self, request_type, folder_path, repo_name):
         # Server configuration
-        host = '192.168.29.4'
+        host = '172.16.2.199'
         port = 12345
         
 

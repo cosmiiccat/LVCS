@@ -22,7 +22,7 @@ function Repositories({ repository }) {
       .catch((error) => {
         console.log(error);
       });
-    navigate("/contentpage");
+    navigate("contentpage");
   };
 
   return (
