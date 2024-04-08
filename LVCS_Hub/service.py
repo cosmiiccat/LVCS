@@ -137,9 +137,9 @@ class LVCS:
 
         return {
             "status": "True",
-            "data": "Pushed successfully!" 
+            "data": "Pulled successfully!" 
         }
     
-if __name__=="__main__":
-    LVCS_PULL = LVCS()
-    LVCS_PULL.pull("/home/abhik/Desktop/LVCS_test/server/testing2/")
+# if __name__=="__main__":
+#     LVCS_PULL = LVCS()
+#     LVCS_PULL.pull("/home/abhik/Desktop/LVCS_test/server/testing2/")
