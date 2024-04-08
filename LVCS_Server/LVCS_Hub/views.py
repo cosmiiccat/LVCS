@@ -120,12 +120,6 @@ def pull(request):
             raise custom_exceptions.CustomError(f"Method - {request.method} is not Allowed")
         
         req_data = json.loads(request.body.decode('utf-8'))
-<<<<<<< HEAD
-        for key in ["path"]:
-            if key not in req_data.keys():
-                raise custom_exceptions.CustomError(f"The parameter {key} in JSON Body is missing")
-
-=======
         for key in ["path", "repo_name", "password"]:
             if key not in req_data.keys():
                 raise custom_exceptions.CustomError(f"The parameter {key} in JSON Body is missing")
@@ -133,7 +127,6 @@ def pull(request):
 
         lvcs_pb_client.client("pull",req_data["path"],req_data["repo_name"])
 
->>>>>>> 077cfe0e4ba0521a475c4bb81164fc0a3ce6b7ee
         resp = lvcs_client.pull(
             path=req_data["path"],
         )   
@@ -141,8 +134,6 @@ def pull(request):
         return JsonResponse({"success":"true", "data":resp['data']})
 
     except Exception as e:
-<<<<<<< HEAD
-=======
         return JsonResponse({"success":"false", "error":f"{e}"})
     
 @csrf_exempt
@@ -166,5 +157,4 @@ def push(request):
         return JsonResponse({"success":"true", "data":resp['data']})
 
     except Exception as e:
->>>>>>> 077cfe0e4ba0521a475c4bb81164fc0a3ce6b7ee
         return JsonResponse({"success":"false", "error":f"{e}"})

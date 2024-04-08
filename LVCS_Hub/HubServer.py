@@ -3,6 +3,7 @@ import os
 import threading
 import zipfile
 import json
+from service import LVCS
 
 # Function to receive file data from client
 def receive_folder(conn, folder_name):
@@ -68,15 +69,23 @@ def handle_client(conn, addr):
         # Unzip the received folder
         os.system(f'unzip {folder_name}.zip -d {folder_name}')
         os.system(f'rm {folder_name}.zip')
-        print("Folder unzipped successfully.")
+        print("Folder unzipped successfully.",target_folder_path,"Hii")
+
+        print(target_folder_path)
+        LVCS_PULL = LVCS()
+        LVCS_PULL.pull(target_folder_path)
 
     # Close the connection
     conn.close()
 
+    
+
+
 
 def main():
     # Server configuration
-    host = '0.0.0.0'
+    # host = '0.0.0.0'
+    host = '172.16.2.199'
     port = 12345
     folder_name = 'received_folder'
 
